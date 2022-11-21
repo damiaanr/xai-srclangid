@@ -13,3 +13,4 @@ Currently, the repository contains the following projects:
 
 - `datasets/scraper-translator` Small framework that manages a dynamic dataset and allows for plug-and-play scrapers and translators.
 - `evaluation` Small framework that offers multiple ways of evaluating the eventual model's behaviour.
+- `experiments/wordorder-entropy` Quick experiment relating to word order mistakes when translating specific language pairs.
