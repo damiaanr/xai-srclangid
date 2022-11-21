@@ -1,6 +1,8 @@
 # Experiment: word order entropy
 The files in this branch contain a very quickly and ugly written experiment concerning word order mistakes in certain specific language pairs.
 
+**Important note: at the moment, the experiment does not really yield useful results (more samples are needed and a possible refining of the experiment settings).**
+
 ## Description of experiment
 Slavic languages are highly inflective (*i.e.*, they tend to express grammatical markers by morphology instead of syntax). Therefore, Slavic languages are generally characteristic of a more free word order, compared to languages that are less inflective (such as Dutch).
 
