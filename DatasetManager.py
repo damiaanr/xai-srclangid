@@ -124,7 +124,8 @@ class DatasetManager:
         print('Original languages: ', original_languages)
 
     def get_untranslated(self, lang_from: str = None, lang_to: str = None,
-                         limit: int = None, type_text: str = None) -> list:
+                         limit: int = None, type_text: str = None,
+                         src_text: str = None) -> list:
         """
         Returns (original) samples that are not yet translated into (a)
         (certain) language(s).
@@ -136,7 +137,8 @@ class DatasetManager:
                       into. If not set, only samples will be included
                       that have not been translated into ANY language
           @limit:     Number of samples to return; if None, no limit
-          @type_text: Filter for 'type' attribute (i.e. Marketplace)
+          @type_text: Filter for 'type' attribute (i.e., Marketplace)
+          @src_text:  Filter for 'source' attribute (i.e., Vinted)
 
         Out:
           @results:   List of data samples that meet the requirements
@@ -153,6 +155,8 @@ class DatasetManager:
             if lang_from is not None and item['lang_ISO639_3'] != lang_from:
                 continue
             if type_text is not None and item['type'] != type_text:
+                continue
+            if src_text is not None and item['source'] != src_text:
                 continue
 
             untranslated[item['identifier']] = item

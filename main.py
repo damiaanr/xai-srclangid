@@ -89,14 +89,17 @@ args.add_argument('-newid',
                   action='store_true')
 
 args.add_argument('-lang',
-                  help='some scraper profiles require a language to be set',
-                  default=None)
+                  help='some scraper profiles require a language to be set')
 
 
 # Additional options (applies only to TRANSLATE action)
 args.add_argument('-type',
                   type=str,
                   help='only translate texts of type (e.g., Marketplace)')
+
+args.add_argument('-source',
+                  type=str,
+                  help='only translate texts of source (e.g., Vinted)')
 
 opts = args.parse_args()
 
@@ -121,8 +124,8 @@ if opts.scrape is not None:
 
     s.save()
 elif opts.translate is not None:  # translation option was valid
-    data = dm.get_untranslated(lang_from, lang_to,
-                               limit=opts.n, type_text=opts.type)
+    data = dm.get_untranslated(lang_from, lang_to, limit=opts.n,
+                               type_text=opts.type, src_text=opts.source)
     t.translate(data, lang_from, lang_to)
     t.save()
 elif opts.merge:
