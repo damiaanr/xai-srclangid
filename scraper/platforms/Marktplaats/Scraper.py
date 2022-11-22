@@ -74,7 +74,7 @@ class MarktplaatsScraper:
         """
         self.save_cache()
 
-    def next_item(self) -> None:
+    def next_item(self) -> str:
         """
         Returns a single parsed advertisement text. Marktplaats auto-
         increments ad ids, so we simply decrement a recent ad ID to
@@ -85,7 +85,7 @@ class MarktplaatsScraper:
           - void
 
         Out:
-          - void
+          @yielded_text: Raw advertisement text (ready for dataset)
         """
         i = 0
         yielded_text = False

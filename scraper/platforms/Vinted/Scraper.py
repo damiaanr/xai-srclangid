@@ -68,7 +68,7 @@ class VintedScraper:
         """
         self.save_cache()
 
-    def next_item(self) -> None:
+    def next_item(self) -> str:
         """
         Returns a single parsed advertisement text. Although Vinted
         auto-increment ads, we can not simply take an ad ID and de-
@@ -81,7 +81,7 @@ class VintedScraper:
           - void
 
         Out:
-          - void
+          @text: Raw advertisement text (ready for dataset)
         """
         i = 0
         text = False

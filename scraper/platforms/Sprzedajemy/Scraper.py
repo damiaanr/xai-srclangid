@@ -82,7 +82,7 @@ class SprzedajemyScraper:
           - void
 
         Out:
-          - void
+          @yielded_text: Raw advertisement text (ready for dataset)
         """
         i = 0
         yielded_text = False
