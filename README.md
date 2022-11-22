@@ -5,7 +5,7 @@ This small command-line program manages a dataset of text samples dynamically. S
 Note that this tool is highly inefficient for usage *in production*: it is meant as an initial starting point for a dataset which can be converted easily to more efficient data representations.
 
 ## Usage
-Run `main.py -help` to invoke a detailed overview of all possible actions.
+Run `main.py --help` to invoke a detailed overview of all possible actions.
 
 ### Examples
 
