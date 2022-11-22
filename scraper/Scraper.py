@@ -1,5 +1,6 @@
 from .platforms.Sprzedajemy.Scraper import *
 from .platforms.Marktplaats.Scraper import *
+from .platforms.Vinted.Scraper import *
 import yaml
 import time
 
@@ -13,11 +14,12 @@ class Scraper:
     # All compatible scrapers should be hard-listed here
     PROFILES = {
         'Sprzedajemy': {'lang_ISO639_3': 'pol', 'type': 'Marketplace'},
-        'Marktplaats': {'lang_ISO639_3': 'dut', 'type': 'Marketplace'}
+        'Marktplaats': {'lang_ISO639_3': 'dut', 'type': 'Marketplace'},
+        'Vinted': {'type': 'Marketplace'}
     }
 
     def __init__(self, profile: str, output_folder: str = 'output',
-                 newid: bool = False) -> None:
+                 newid: bool = False, lang: str = None) -> None:
         """
         Init (see general class description above).
 
@@ -27,6 +29,9 @@ class Scraper:
           @newid:         See documentation for the platform-specific
                           classes to which this setting applies (note:
                           this might not be supported by all profiles)
+          @lang:          If profile supports multiple languages (i.e.,
+                          lacks key 'lang_ISO639_3' in above global),
+                          language can be manually specified.
 
         Out:
           n/a
@@ -35,7 +40,16 @@ class Scraper:
             raise Exception("Scraping profile does not exist")
 
         scraperclass = globals()[profile + "Scraper"]  # dynamic load
-        self.scraper = scraperclass(get_new_last_id=newid)
+
+        if 'lang_ISO639_3' not in self.PROFILES[profile]:
+            if not lang:
+                raise Exception("Language must be specified for this profile")
+
+            self.scraper = scraperclass(lang=lang)
+            self.lang = lang
+        else:
+            self.scraper = scraperclass(get_new_last_id=newid)
+
         self.profile = profile
         self.data = []
 
@@ -59,6 +73,10 @@ class Scraper:
         while i < iterations:
             try:
                 data_element = self.PROFILES[self.profile].copy()
+
+                if 'lang_ISO639_3' not in data_element:
+                    data_element['lang_ISO639_3'] = self.lang
+
                 data_element['source'] = self.profile
                 data_element['text'] = self.scraper.next_item()
                 data_element['translated'] = False
@@ -73,7 +91,7 @@ class Scraper:
                 print('\r'+'Parsed text %d/%d' % (i+1, iterations), end='')
             except Exception as error:
                 print('\r\n'+'Round terminated (see error below)')
-                if error.args[0] == "blocked":
+                if error.args[0] == "blocked" or error.args[0] == "runout":
                     return False
 
                 print(error)

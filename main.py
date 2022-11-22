@@ -39,6 +39,7 @@ class validate_translate_options(argparse.Action):
 
 args = argparse.ArgumentParser()
 
+
 # Either one action needs to be selected: SCRAPE, TRANSLATE, or MERGE
 args_main_action = args.add_mutually_exclusive_group(required=True)
 
@@ -65,6 +66,7 @@ args.add_argument('-folder',
                   help='Folder in which dataset is stored',
                   default='output')
 
+
 # Additional options (applies to SCRAPE and TRANSLATE action)
 args.add_argument('-n',
                   type=int,
@@ -86,6 +88,11 @@ args.add_argument('-newid',
                   'as starting point for scraping',
                   action='store_true')
 
+args.add_argument('-lang',
+                  help='some scraper profiles require a language to be set',
+                  default=None)
+
+
 # Additional options (applies only to TRANSLATE action)
 args.add_argument('-type',
                   type=str,
@@ -93,11 +100,12 @@ args.add_argument('-type',
 
 opts = args.parse_args()
 
+
 # Executing actions
 dm = DatasetManager(folder=opts.folder)
 
 if opts.scrape is not None:
-    s = Scraper(opts.scrape[0], newid=opts.newid)
+    s = Scraper(opts.scrape[0], newid=opts.newid, lang=opts.lang)
     i = 0
 
     while i < opts.rounds:
@@ -107,7 +115,7 @@ if opts.scrape is not None:
         response = s.run(opts.n)
         print('')
         if response is False:
-            print('Temporary blocked by platform - all rounds terminated')
+            print('Blocked or run out of fresh IDs - all rounds terminated')
             break
         i += 1
 
