@@ -98,6 +98,7 @@ class DatasetManager:
           - void
         """
         types = {}
+        sources = {}
         original_languages = {}
         translations = 0
         total_items = len(self.data)
@@ -110,10 +111,14 @@ class DatasetManager:
             if item['type'] not in types:
                 types[item['type']] = 0
 
+            if item['source'] not in sources:
+                sources[item['source']] = 0
+
             if item['lang_ISO639_3'] not in original_languages:
                 original_languages[item['lang_ISO639_3']] = 0
 
             types[item['type']] += 1
+            sources[item['source']] += 1
             original_languages[item['lang_ISO639_3']] += 1
 
         print('The dataset contains %d texts, of which %d original texts'
@@ -121,6 +126,7 @@ class DatasetManager:
               % (total_items, total_items - translations, translations))
 
         print('Types: ', types)
+        print('Sources: ', sources)
         print('Original languages: ', original_languages)
 
     def get_untranslated(self, lang_from: str = None, lang_to: str = None,
