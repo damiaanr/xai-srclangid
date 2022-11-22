@@ -10,7 +10,7 @@ Run `main.py -help` to invoke a detailed overview of all possible actions.
 ### Examples
 
 1. Run `main.py -scrape Sprzedajemy -n 100 -rounds 5 -roundsleep 60` to add a total of 500 new samples to the dataset, scraped from [Sprzedajemy.pl](https://sprzedajemy.pl), in 5 rounds with a minute of cool-down time in between.
-2. Run `main.py -scrape Sprzedajemy -n 50 -rounds 10 -roundsleep 5 -lang ces` to add a total of 500 new samples to the dataset, scraped from [Vinted.cz](https://vinted.cz), in 10 rounds with five seconds of cool-down time in between.
+2. Run `main.py -scrape Vinted -n 50 -rounds 10 -roundsleep 5 -lang ces` to add a total of 500 new samples to the dataset, scraped from [Vinted.cz](https://vinted.cz), in 10 rounds with five seconds of cool-down time in between.
 3. Run `main.py -translate pol dut GoogleUnofficial -n 40` to translate 40 Polish samples from the dataset into Dutch using an unofficial Google Translate API endpoint. Only original Polish texts which have not been translated into Dutch will be selected.
 4. Run `main.py -stats` to overview the contents of the dataset (*i.e.*, the amount of samples per language, and the number of translations).
 ## Instruments
