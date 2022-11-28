@@ -91,6 +91,11 @@ args.add_argument('-newid',
 args.add_argument('-lang',
                   help='some scraper profiles require a language to be set')
 
+args.add_argument('-categoryid',
+                  help='if set, only ads of a specific category will be'
+                  ' (only applies to Marktplaats)',
+                  default=None)
+
 
 # Additional options (applies only to TRANSLATE action)
 args.add_argument('-type',
@@ -105,10 +110,12 @@ opts = args.parse_args()
 
 
 # Executing actions
-dm = DatasetManager(folder=opts.folder)
+if opts.scrape is None:
+    dm = DatasetManager(folder=opts.folder)
 
 if opts.scrape is not None:
-    s = Scraper(opts.scrape[0], newid=opts.newid, lang=opts.lang)
+    s = Scraper(opts.scrape[0], newid=opts.newid,
+                lang=opts.lang, catid=opts.categoryid)
     i = 0
 
     while i < opts.rounds:

@@ -117,3 +117,42 @@ def get_recent_ad_id() -> int:
         raise Exception("Could not fetch starting ID (possible block)")
 
     return int(recent_ids[0]['itemId'][1:])
+
+
+def get_recent_ad_ids(category_id: int = 2600, page: int = 0) -> dict:
+    """
+    Quick function written for Elize (for Hackathon)
+
+    In:
+      @category_id: Marktplaats category ID to scrape
+      @page: Could be incremented gradually to obtain new results (but
+             in practice not necessary)
+
+    Out:
+      @recent_ids: dict with ad ID as key and title of advertisement as
+                   value
+    """
+
+    print('\r\n'+'New ad ids retrieved!')
+
+    try:
+        overview_req = Request('https://www.marktplaats.nl/cp/api/feed-items'
+                               '?feedType=FOR_YOU'
+                               '&categoryId=' + str(category_id) +
+                               '&page=' + str(page))
+
+        # It is a simple JSON feed, so no need for complex parsers
+        overview_json = urlopen(overview_req).read().decode('utf-8')
+        overview_data = json.loads(overview_json)
+
+    except Exception:
+        raise Exception("Could not fetch starting IDs (possible block)")
+
+    recent_ids = {}
+    for recent_id in overview_data:
+        if recent_id['itemId'][0] != 'm':
+            continue
+
+        recent_ids[int(recent_id['itemId'][1:])] = recent_id['title']
+
+    return recent_ids

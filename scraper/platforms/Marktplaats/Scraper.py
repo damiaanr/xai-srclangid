@@ -26,7 +26,7 @@ class MarktplaatsScraper:
     MAX_CONSECUTIVE_ERRORS = 5  # maximum HTTP errs after which to stop
 
     def __init__(self, cache_file: str = None, get_new_last_id: bool = False,
-                 from_last_id: int = None) -> None:
+                 from_last_id: int = None, category_id: int = None) -> None:
         """
         Init (see class description above).
 
@@ -40,6 +40,8 @@ class MarktplaatsScraper:
                             last attempted id from cache forms the
                             starting point.
           @from_last_id:    if set, decrement starts from given id.
+          @category_id:     if set, ads will be scraped from specific
+                            category (Marktplaats ID number)
 
         Out:
           - void
@@ -49,16 +51,26 @@ class MarktplaatsScraper:
 
         self.load_cache(cache_file=cache_file)
 
+        self.category_id = category_id
+
+        if category_id is not None:
+            self.page_no = 0
+
         self.cookie_string = None
 
         time.sleep(self.SLEEP_TIME)
 
-        if get_new_last_id or len(self.parsed_ids) == 0:
-            self.current_id = get_recent_ad_id()
-        elif from_last_id is not None:
-            self.current_id = from_last_id
+        if category_id is None:
+            if get_new_last_id or len(self.parsed_ids) == 0:
+                self.current_id = get_recent_ad_id()
+            elif from_last_id is not None:
+                self.current_id = from_last_id
+            else:
+                self.current_id = self.parsed_ids[-1]
         else:
-            self.current_id = self.parsed_ids[-1]
+            self.current_ids = get_recent_ad_ids(self.category_id,
+                                                 self.page_no)
+            self.current_id = None
 
         self.parser = AdParser()
 
@@ -74,7 +86,7 @@ class MarktplaatsScraper:
         """
         self.save_cache()
 
-    def next_item(self) -> str:
+    def next_item(self) -> U[T[str, str], str]:
         """
         Returns a single parsed advertisement text. Marktplaats auto-
         increments ad ids, so we simply decrement a recent ad ID to
@@ -95,8 +107,12 @@ class MarktplaatsScraper:
             i += 1
 
             # decreasing the ad number until id that was not yet parsed
-            while self.current_id in self.parsed_ids:
-                self.current_id -= 1
+            while self.current_id in self.parsed_ids \
+                    or self.current_id is None:
+                if self.category_id is not None:
+                    self.current_id, title = self.pop_new_id()
+                else:
+                    self.current_id -= 1
 
             time.sleep(self.SLEEP_TIME)
             self.parsed_ids.append(self.current_id)
@@ -126,10 +142,25 @@ class MarktplaatsScraper:
             if yielded_text:  # convert newlines
                 yielded_text = ' '.join(yielded_text.split())
 
+                if self.category_id is not None:
+                    yielded_text = (yielded_text, title)
+
         if not yielded_text:
             raise Exception("Failed to fetch an item")
 
         return yielded_text
+
+    def pop_new_id(self):
+        """
+        Quick method written for Elize for Hackathon
+        """
+        if len(self.current_ids) == 0:
+            time.sleep(self.SLEEP_TIME)
+            self.page_no += 1
+            self.current_ids = get_recent_ad_ids(self.category_id,
+                                                 self.page_no)
+
+        return self.current_ids.popitem()
 
     def load_cache(self, cache_file: str = None) -> None:
         """

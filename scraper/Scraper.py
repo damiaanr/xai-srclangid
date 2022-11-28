@@ -1,6 +1,7 @@
 from .platforms.Sprzedajemy.Scraper import *
 from .platforms.Marktplaats.Scraper import *
 from .platforms.Vinted.Scraper import *
+from typing import Union as U, Tuple as T
 import yaml
 import time
 
@@ -19,7 +20,8 @@ class Scraper:
     }
 
     def __init__(self, profile: str, output_folder: str = 'output',
-                 newid: bool = False, lang: str = None) -> None:
+                 newid: bool = False, lang: str = None,
+                 catid: int = None) -> None:
         """
         Init (see general class description above).
 
@@ -32,10 +34,12 @@ class Scraper:
           @lang:          If profile supports multiple languages (i.e.,
                           lacks key 'lang_ISO639_3' in above global),
                           language can be manually specified.
+          @catid:         if set, only scrape ads for a specific category
 
         Out:
           n/a
         """
+
         if profile not in self.PROFILES:
             raise Exception("Scraping profile does not exist")
 
@@ -48,7 +52,11 @@ class Scraper:
             self.scraper = scraperclass(lang=lang)
             self.lang = lang
         else:
-            self.scraper = scraperclass(get_new_last_id=newid)
+            if profile == 'Marktplaats':
+                self.scraper = scraperclass(get_new_last_id=newid,
+                                            category_id=catid)
+            else:
+                self.scraper = scraperclass(get_new_last_id=newid)
 
         self.profile = profile
         self.data = []
@@ -78,7 +86,11 @@ class Scraper:
                     data_element['lang_ISO639_3'] = self.lang
 
                 data_element['source'] = self.profile
-                data_element['text'] = self.scraper.next_item()
+                next_item = self.scraper.next_item()
+
+                if type(next_item) is tuple:
+                    data_element['text'], data_element['title'] = next_item
+
                 data_element['translated'] = False
 
                 # since all scrapers sleep, the below line denotes a
