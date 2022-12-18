@@ -90,6 +90,8 @@ class Scraper:
 
                 if type(next_item) is tuple:
                     data_element['text'], data_element['title'] = next_item
+                else:
+                    data_element['text'] = next_item
 
                 data_element['translated'] = False
 
