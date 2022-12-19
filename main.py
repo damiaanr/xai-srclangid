@@ -16,13 +16,13 @@ pl = dm.get_subset({'lang_ISO639_3': 'pol',
 
 # translated texts
 en_t = dm.get_subset({'lang_ISO639_3': 'eng',
-                          'lang_ISO639_3_original': 'pol',
-                          'translated': True,
-                          'source': 'Vinted'})[:n]
+                      'lang_ISO639_3_original': 'pol',
+                      'translated': True,
+                      'source': 'Vinted'})[:n]
 pl_t = dm.get_subset({'lang_ISO639_3': 'pol',
-                          'lang_ISO639_3_original': 'eng',
-                          'translated': True,
-                          'source': 'Vinted'})[:n]
+                      'lang_ISO639_3_original': 'eng',
+                      'translated': True,
+                      'source': 'Vinted'})[:n]
 
 occurrences_en = parse_ads(en, spacy.load("en_core_web_trf"))
 occurrences_pl = parse_ads(pl, spacy.load("pl_core_news_lg"))
