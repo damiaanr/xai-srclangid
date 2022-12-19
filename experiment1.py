@@ -1,6 +1,10 @@
 from src.Experiment import *
 from src.functions import train_test_svm
 
+#######################################################################
+#                             EXPERIMENT A
+#######################################################################
+
 # First we experiment with manually designed features
 e = Experiment(num_samples=7500)
 
@@ -26,8 +30,12 @@ train_test_svm(dataset, linear=True)
 # versus radial basis
 train_test_svm(dataset, linear=False, no_perm_imp=False)
 
-# Now, we repeat the experiment with more general features
 
+#######################################################################
+#                             EXPERIMENT B
+#######################################################################
+
+# Now, we repeat the experiment with more general features
 e2 = Experiment(num_samples=7500)
 
 e2.add_language(lang='pol', translated=False)
@@ -42,7 +50,5 @@ e2.add_features(feature='morphngram', options={'n': 3}, top_n=100)
 
 dataset2 = e2.split_dataset()
 
-# Linear
 train_test_svm(dataset2, linear=True)
-# versus radial basis
 train_test_svm(dataset2, linear=False)
