@@ -1,0 +1,10 @@
+nltk==3.7
+numpy==1.23.4
+PyYAML==6.0
+scikit_learn==1.2.0
+spacy==3.4.3
+pl-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/pl_core_news_lg-3.4.0/pl_core_news_lg-3.4.0-py3-none-any.whl
+nl-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/nl_core_news_lg-3.4.0/nl_core_news_lg-3.4.0-py3-none-any.whl
+lt-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/lt_core_news_lg-3.4.0/lt_core_news_lg-3.4.0-py3-none-any.whl
+en-core-web-trf @ https://github.com/explosion/spacy-models/releases/download/en_core_web_trf-3.4.1/en_core_web_trf-3.4.1-py3-none-any.whl
+de-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/de_core_news_lg-3.4.0/de_core_news_lg-3.4.0-py3-none-any.whl

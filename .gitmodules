@@ -1,0 +1,12 @@
+[submodule "evaluation"]
+	path = evaluation
+	url = git@github.com:damiaanr/politie-thesis.git
+	branch = evaluation
+[submodule "wordorderentropy"]
+	path = wordorderentropy
+	url = git@github.com:damiaanr/politie-thesis.git
+	branch = experiments/wordorder-entropy
+[submodule "dataset"]
+	path = dataset
+	url = git@github.com:damiaanr/politie-thesis.git
+	branch = datasets/scraper-translator
