@@ -38,7 +38,7 @@ When concatenating all of the above features into a single representation vector
 
 Interestingly, for the non-linear SVM, the top five was as follows: *cases: Nom, adjnounorder: AN, adjnounorder: NA, posentropy: NOUN, verbaspect: Imp*. Predicate-order features didn't even feature in the top 15.
 
-When training the classifier with only one out of the six above-listed feature sets, the following accuracy scores were achieved:
+When training the linear classifier with only one out of the six above-listed feature sets, the following accuracy scores were achieved:
 
 | feature set      | accuracy | difference with baseline | classes |
 |------------------|----------|--------------------------|---------|
@@ -48,6 +48,7 @@ When training the classifier with only one out of the six above-listed feature s
 | `cases`          | 0.556    | +0.056                   | 7       |
 | `adjnounorder`   | 0.636    | +0.136                   | 2       |
 | `posentropy`     | 0.645    | +0.145 (+0.235 unrstrc.) | 10 (127)|
+| **all of above** | 0.712    | +0.212 (+0.274 unrstrc.) | 36 (158)|
 
 When considering 'classical' features for the classification tasks (i.e., character *n*-grams, PoS *n*-grams and morph-*n*-grams; see `experiment1.py` for the details) the accuracy was `0.939` for a linear SVM.
 
