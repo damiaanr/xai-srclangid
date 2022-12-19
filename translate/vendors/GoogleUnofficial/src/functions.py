@@ -32,7 +32,7 @@ iso_639_3_to_1 = {
     'chv': 'cv',
     'wel': 'cy',
     'dan': 'da',
-    'ger': 'de',
+    'deu': 'de',
     'div': 'dv',
     'dzo': 'dz',
     'ewe': 'ee',
