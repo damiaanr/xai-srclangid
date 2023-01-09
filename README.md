@@ -28,7 +28,7 @@ Currently, there is **one** translator working stably.
 - `GoogleUnofficial` translates using an old Google API endpoint (lower in quality than the live version of Google Translate)
 
 ## Dataset
-The dataset consists of all `.yaml` files in a defined folder (default: `output`). Each file contains a set of text samples, which are the individual elements in the dataset. At the moment, the dataset contains about **20,000** samples (predominantly in `dut`, `eng`, and `pol`).
+The dataset consists of all `.yaml` files in a defined folder (default: `output`). Each file contains a set of text samples, which are the individual elements in the dataset. At the moment, the dataset contains about **140,000** samples of which about half of the samples are translations (predominantly in `dut`, `eng`, `ces`, `slk`, `deu`, and `pol`).
 ### Format
 Each sample (element) in the dataset can hold the following attributes:
 - **`identifier`** internal ID of the sample (translated samples are represented by the same identifier as the original sample)
