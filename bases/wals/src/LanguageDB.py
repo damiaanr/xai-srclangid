@@ -43,8 +43,16 @@ class LanguageDB:
             # small DB; so this redundancy-for-convenience is not bad
             for entry in languages:
                 self.languages_wals[entry['ID']] = entry
-                self.languages_iso639_3[entry['ISO639P3code']] = \
-                    {'ID': entry['ID']}
+
+                # some languages have ambiguous ISO639-3 codes (e.g.,
+                # WALS codes 'gti' and 'ger' both have ISO639-3 'deu';
+                # so, this will be a list of Wals codes instead
+
+                if entry['ISO639P3code'] not in self.languages_iso639_3:
+                    self.languages_iso639_3[entry['ISO639P3code']] = []
+
+                self.languages_iso639_3[entry['ISO639P3code']].append(
+                    {'ID': entry['ID']})
 
     def populate_characteristics(self, explicit: bool = False,
                                  wals_codes: list = None) -> None:
@@ -120,15 +128,33 @@ class LanguageDB:
         """
         return True if iso639_3_code in self.languages_iso639_3 else False
 
-    def get_wals_code_by_iso639_3(self, iso639_3_code: str) -> bool:
+    def get_wals_code_by_iso639_3(self, iso639_3_code: str,
+                                  preferences: list = None) -> str:
         """
+        Note: as ISO639-3 codes may be ambiguous within WALS (i.e.,
+        multiple languages that have the same ISO639-3 code are
+        registered within WALS), either the first language is chosen,
+        or a code within a given list of preferences (as work-around).
+
         In:
           @iso639_3_code: standardised ISO639-3 language code
+          @preferences:   list of prefered WALS codes if multiple
+                          options are available; if not set, first
+                          occurring WALS code is returned
 
         Out:
           @wals_code: language code within WALS
         """
-        return self.languages_iso639_3[iso639_3_code]['ID']
+        possible_codes = set()
+
+        for wals_entry in self.languages_iso639_3[iso639_3_code]:
+            possible_codes.add(wals_entry['ID'])
+
+        if preferences is not None and len(possible_codes) > 1:
+            preferences = set(preferences)
+            possible_codes = preferences & possible_codes
+
+        return next(iter(possible_codes))
 
     def get_characteristics_fields(data_path: str = "bases/wals/data/") \
             -> T[dict, dict, dict]:
