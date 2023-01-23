@@ -7,9 +7,8 @@ class LanguageDB:
     LanguageDB() is a service-class that provides an interface for
     the WALS database (consisting of .csv-files).
     """
-    DATA_PATH = "bases/wals/data/"
 
-    def __init__(self):
+    def __init__(self, data_path = "bases/wals/data/"):
         """
         Init (see class description above).
 
@@ -19,6 +18,7 @@ class LanguageDB:
         Out:
           n/a
         """
+        self.DATA_PATH = data_path
         self.populate_db_defaults()
         self.characteristics_populated = False
 
