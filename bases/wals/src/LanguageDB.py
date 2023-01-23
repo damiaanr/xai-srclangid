@@ -152,7 +152,10 @@ class LanguageDB:
 
         if preferences is not None and len(possible_codes) > 1:
             preferences = set(preferences)
-            possible_codes = preferences & possible_codes
+            preference_overlap = preferences & possible_codes
+            
+            if len(preference_overlap) > 0:
+                possible_codes = preference_overlap
 
         return next(iter(possible_codes))
 
