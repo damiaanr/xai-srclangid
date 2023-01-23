@@ -72,13 +72,18 @@ class LanguageDB:
         Out:
           - void
         """
-        charc_keys, charc_values, charc_chapters = LanguageDB. \
+        charc_keys, charc_values, \
+            charc_chapters, charc_classes = LanguageDB. \
             get_characteristics_fields(data_path=self.DATA_PATH)
 
         # storing the chapter ids for every parameter (as below) might
         # be useful for applications where parameters for languages
         # need to be filtered (e.g., on area (phonology etc.))
         self.params_chapter_mapping = charc_chapters
+
+        # in applications where WALS features are predicted, it is use-
+        # ful to store the total number of possible classes per feature
+        self.params_num_classes = charc_classes
 
         #  doing this in p..._db_defaults() would make Ø-dicts ambiguous
         if wals_codes:
@@ -153,7 +158,7 @@ class LanguageDB:
         if preferences is not None and len(possible_codes) > 1:
             preferences = set(preferences)
             preference_overlap = preferences & possible_codes
-            
+
             if len(preference_overlap) > 0:
                 possible_codes = preference_overlap
 
@@ -172,14 +177,17 @@ class LanguageDB:
           @data_path: path to WALS dataset (download from wals.info)
 
         Out:
-          @charc_keys:   dict, parameter codes as keys, names as values
-          @charc_values: dict, value codes as keys, desc. as values
-          @charc_areas:  dict, parameter codes as keys, area code as
-                         values
+          @charc_keys:    dict, parameter codes as keys, name as value
+          @charc_values:  dict, value codes as key, desc. as value
+          @charc_areas:   dict, parameter codes as key, area code as
+                          value
+          @charc_classes: dict, parameter codes as key, number of
+                          possible values (/classes) as value
         """
         charc_keys = {}
         charc_chapters = {}
         charc_values = {}
+        charc_classes = {}
 
         file_params = data_path + 'parameters.csv'
         file_codes = data_path + 'codes.csv'
@@ -197,9 +205,13 @@ class LanguageDB:
             next(values)
 
             for value in values:
-                charc_values[value[0]] = value[2]
+                if value[1] not in charc_classes:
+                    charc_classes[value[1]] = 0
 
-        return charc_keys, charc_values, charc_chapters
+                charc_values[value[0]] = value[2]
+                charc_classes[value[1]] += 1
+
+        return charc_keys, charc_values, charc_chapters, charc_classes
 
     def get_chapters_fields(data_path: str = "bases/wals/data/") -> dict:
         """
