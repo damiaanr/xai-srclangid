@@ -8,12 +8,12 @@ class LanguageDB:
     the WALS database (consisting of .csv-files).
     """
 
-    def __init__(self, data_path = "bases/wals/data/"):
+    def __init__(self, data_path: str = "bases/wals/data/"):
         """
         Init (see class description above).
 
         In:
-          - void
+          @data_path: path to WALS dataset (download from wals.info)
 
         Out:
           n/a
@@ -55,16 +55,22 @@ class LanguageDB:
         ALL languages characteristics were parsed.
 
         In:
-          @explicit:   if True, parameter name is stored instead of key
-                       important for Language.get_characteristic() etc.
+          @explicit:   if True, parameter names and values are stored
+                       instead of codes (important for
+                       Language.get_characteristic() etc.)
           @wals_codes: list of WALS codes of languages to process; if
                        empty, all languages will be parsed.
 
         Out:
           - void
         """
-        if explicit:  # pre-load meta CSVs
-            charc_keys, charc_values = LanguageDB.get_characteristics_fields()
+        charc_keys, charc_values, charc_chapters = LanguageDB. \
+            get_characteristics_fields(data_path=self.DATA_PATH)
+
+        # storing the chapter ids for every parameter (as below) might
+        # be useful for applications where parameters for languages
+        # need to be filtered (e.g., on area (phonology etc.))
+        self.params_chapter_mapping = charc_chapters
 
         #  doing this in p..._db_defaults() would make Ø-dicts ambiguous
         if wals_codes:
@@ -74,7 +80,9 @@ class LanguageDB:
             for wals_code in self.languages_wals:
                 self.languages_wals[wals_code]['Characteristics'] = {}
 
-        with open(DATA_PATH + 'values.csv', encoding='utf8') as values_file:
+        file_values = self.DATA_PATH + 'values.csv'
+
+        with open(file_values, encoding='utf8') as values_file:
             values = csv.reader(values_file)
             next(values)
 
@@ -122,7 +130,8 @@ class LanguageDB:
         """
         return self.languages_iso639_3[iso639_3_code]['ID']
 
-    def get_characteristics_fields() -> T[dict, dict]:
+    def get_characteristics_fields(data_path: str = "bases/wals/data/") \
+            -> T[dict, dict, dict]:
         """
         Provides a mapping between codes and explicit names for keys
         and values of parameters of language characteristics. Only
@@ -131,25 +140,59 @@ class LanguageDB:
         This is a static method.
 
         In:
-          - void
+          @data_path: path to WALS dataset (download from wals.info)
 
         Out:
-          @charc_keys: dict, parameter codes as keys, names as values
+          @charc_keys:   dict, parameter codes as keys, names as values
           @charc_values: dict, value codes as keys, desc. as values
+          @charc_areas:  dict, parameter codes as keys, area code as
+                         values
         """
         charc_keys = {}
+        charc_chapters = {}
         charc_values = {}
 
-        with open(DATA_PATH + 'parameters.csv', encoding='utf8') as keys_file:
+        file_params = data_path + 'parameters.csv'
+        file_codes = data_path + 'codes.csv'
+
+        with open(file_params, encoding='utf8') as keys_file:
             keys = csv.reader(keys_file)
+            next(keys)
 
             for key in keys:
                 charc_keys[key[0]] = key[1]
+                charc_chapters[key[0]] = key[3]
 
-        with open(DATA_PATH + 'codes.csv', encoding='utf8') as values_file:
+        with open(file_codes, encoding='utf8') as values_file:
             values = csv.reader(values_file)
+            next(values)
 
             for value in values:
                 charc_values[value[0]] = value[2]
 
-        return charc_keys, charc_values
+        return charc_keys, charc_values, charc_chapters
+
+    def get_chapters_fields(data_path: str = "bases/wals/data/") -> dict:
+        """
+        Returns a mapping between chapter IDs and their corresponding
+        data fields (e.g., 'Area_ID', as listed in the CSV header of
+        chapters.csv in the WALS data).
+
+        In:
+          @data_path: path to WALS dataset (download from wals.info)
+
+        Out:
+          @dict: with chapter IDs as keys and a tuple as values
+        """
+        fields = {}
+
+        file_chapters = data_path + 'chapters.csv'
+
+        with open(file_chapters, encoding='utf8') as chapters_file:
+            values = csv.reader(chapters_file)
+            next(values)
+
+            for value in values:
+                fields[value[0]] = tuple(value[1:])  # id is cut off !!
+
+        return fields

@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Union as U
 
 
 class Language:
@@ -28,25 +29,33 @@ class Language:
         self.data = language_db.languages_wals[wals_code]
         self.similarity_scores = {}  # stored for each pair in each instance
 
-    def get_characteristic(self, key: str) -> str:
+    def get_characteristic(self, key: str = None) -> U[str, dict]:
         """
         Returns language-specific value for a structural parameter.
         Note that the key may be either a code or an explicit name
         based on the settings profile of populating in LanguageDB().
+        If @key is None, all language-specific features for the current
+        language are returned.
 
         In:
-          @key: parameter name/key; structural indicator
+          @key: parameter name/key (structural indicator); if None,
+                all characteristics are returned
 
         Out:
-          @value: language-specific value/characteristic
+          @value: either language-specific value/characteristic (if
+                  @key set) or a dict with as keys either parameter
+                  name or key of feature (depending on settings)
         """
         if not self.language_db.characteristics_populated:
             self.language_db.populate_characteristics([self.wals_code])
 
-        value = self.language_db.languages_wals[self.wals_code]
-        value = value['Characteristics'][key]
+        out = self.language_db.languages_wals[self.wals_code]
+        out = out['Characteristics']
 
-        return value
+        if key is not None:
+            out = out[key]
+
+        return out
 
     def get_mutual_characteristics(self, contrast: Language) -> list:
         """
