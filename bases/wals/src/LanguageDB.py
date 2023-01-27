@@ -9,6 +9,8 @@ class LanguageDB:
     """
 
     DATA_PATH = "bases/wals/data/"
+    WALS_CODE_PREFERENCES = None  # could be hard-coded if desired
+    PARTIAL_POPULATION = None  # could be set by pop...haracteristics()
 
     def __init__(self, data_path: str = None):
         """
@@ -58,7 +60,8 @@ class LanguageDB:
                     {'ID': entry['ID']})
 
     def populate_characteristics(self, explicit: bool = False,
-                                 wals_codes: list = None) -> None:
+                                 wals_codes: list = None,
+                                 partial: bool = False) -> None:
         """
         Parses language-specific characteristics and adds parameters
         and values that apply to languages_wals dict (note: NOT the
@@ -70,7 +73,16 @@ class LanguageDB:
                        instead of codes (important for
                        Language.get_characteristic() etc.)
           @wals_codes: list of WALS codes of languages to process; if
-                       empty, all languages will be parsed.
+                       empty, all languages will be parsed; if set,
+                       the list of WALS codes given will automatically
+                       be stored globally as WALS codes of preference
+                       (for cases of ambiguity) consulted when
+                       obtaining a WALS code from an ISO639-3 code
+                       (e.g., when evaluating scores)
+          @partial:    True signals that this instance of LanguageDB
+                       will only be populated partially; in this case,
+                       @wals_codes are the only languages that will be
+                       populated in this instance (need to be set!)
 
         Out:
           - void
@@ -94,6 +106,11 @@ class LanguageDB:
 
         #  doing this in p..._db_defaults() would make Ø-dicts ambiguous
         if wals_codes:
+            self.WALS_CODE_PREFERENCES = wals_codes
+
+            if partial:
+                self.PARTIAL_POPULATION = wals_codes
+
             for wals_code in wals_codes:
                 self.languages_wals[wals_code]['Characteristics'] = {}
         else:
@@ -165,6 +182,9 @@ class LanguageDB:
 
         for wals_entry in self.languages_iso639_3[iso639_3_code]:
             possible_codes.add(wals_entry['ID'])
+
+        if preferences is None and self.WALS_CODE_PREFERENCES is not None:
+            preferences = self.WALS_CODE_PREFERENCES
 
         if preferences is not None and len(possible_codes) > 1:
             preferences = set(preferences)

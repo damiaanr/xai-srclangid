@@ -30,9 +30,15 @@ class WalsEvaluator:
     def __init__(self, load_from_cache: bool = True,
                  save_to_cache: bool = True, cache_file: str = None,
                  cache_folder: str = None, db_obj: LanguageDB = None,
-                 db_data_path: str = None, normalise: bool = True):
+                 db_data_path: str = None, normalise: bool = True,
+                 suppress_partial_warning: bool = False):
         """
         Init (see class description above).
+
+        Note: if @db_obj is given and @normalise is False, not all
+              possible language pairs will be evaluated; ONLY pairs for
+              the languages that were populated in the given LanguageDB
+              (and are stored in its global WALS_CODE_PREFERENCES)
 
         In:
           @load_from_cache: if True, similarity scores are pre-loaded
@@ -60,6 +66,9 @@ class WalsEvaluator:
                             portion of characteristics that overlap
                             (useful in tasks relating to pure language
                             similarity)
+          @suppress_:       if True, the print()-statement that warns
+           partial_         about not all scores being able to be
+           warning          evaluated is not executed
 
         Out:
           - void
@@ -79,7 +88,11 @@ class WalsEvaluator:
         if load_from_cache:
             self.load_scores_from_cache(cache_file=cache_file)
         else:
-            self.populate_base_scores()
+            if self.language_db.PARTIAL_POPULATION is not None \
+                    and not suppress_partial_warning:
+                print('Note: this language database is partially populated!')
+
+            self.populate_base_scores(save_scores=normalise)
 
             if normalise:
                 self.normalise_base_scores()
@@ -167,6 +180,8 @@ class WalsEvaluator:
         """
         Calculates similarity scores for each unique combination of
         languages and stores this score within each Language() instance.
+        If stored LanguageDB object is only partially populated, only
+        languages which were explicitly populated will be evaluated.
 
         In:
           @save_scores: if True, list of scores is stored within the
@@ -179,6 +194,11 @@ class WalsEvaluator:
             self.scores = []
 
         for l1, l2 in self.language_pairs:
+            if self.language_db.PARTIAL_POPULATION is not None:
+                if l1 not in self.language_db.PARTIAL_POPULATION \
+                        or l2 not in self.language_db.PARTIAL_POPULATION:
+                    continue
+
             score = self.calculate_base_score(self.languages[l1],
                                               self.languages[l2])
 
