@@ -8,7 +8,9 @@ class LanguageDB:
     the WALS database (consisting of .csv-files).
     """
 
-    def __init__(self, data_path: str = "bases/wals/data/"):
+    DATA_PATH = "bases/wals/data/"
+
+    def __init__(self, data_path: str = None):
         """
         Init (see class description above).
 
@@ -18,7 +20,8 @@ class LanguageDB:
         Out:
           n/a
         """
-        self.DATA_PATH = data_path
+        if data_path is not None:
+            self.DATA_PATH = data_path
         self.populate_db_defaults()
         self.characteristics_populated = False
 
@@ -85,6 +88,10 @@ class LanguageDB:
         # ful to store the total number of possible classes per feature
         self.params_num_classes = charc_classes
 
+        # might be handy for later use (mappings are universal)
+        self.charc_keys = charc_keys
+        self.charc_values = charc_values
+
         #  doing this in p..._db_defaults() would make Ø-dicts ambiguous
         if wals_codes:
             for wals_code in wals_codes:
@@ -110,8 +117,12 @@ class LanguageDB:
                 self.languages_wals[entry[1]]['Characteristics'][entry[2]] = \
                     entry[4]
 
-        if not wals_codes:
-            self.characteristics_populated = True
+        # Previously, this would only be triggered if wals_codes was
+        # None (so that the bool would be set to True if ALL languages
+        # were populated); now, this changed to accommodate other use-
+        # cases for which only a subset of languages could also be
+        # considered 'all (that is necessary)'.
+        self.characteristics_populated = True
 
     def verify_wals_code(self, wals_code: str) -> bool:
         """
@@ -165,7 +176,7 @@ class LanguageDB:
         return next(iter(possible_codes))
 
     def get_characteristics_fields(data_path: str = "bases/wals/data/") \
-            -> T[dict, dict, dict]:
+            -> T[dict, dict, dict, dict]:
         """
         Provides a mapping between codes and explicit names for keys
         and values of parameters of language characteristics. Only
@@ -177,12 +188,12 @@ class LanguageDB:
           @data_path: path to WALS dataset (download from wals.info)
 
         Out:
-          @charc_keys:    dict, parameter codes as keys, name as value
-          @charc_values:  dict, value codes as key, desc. as value
-          @charc_areas:   dict, parameter codes as key, area code as
-                          value
-          @charc_classes: dict, parameter codes as key, number of
-                          possible values (/classes) as value
+          @charc_keys:     dict, parameter codes as keys, name as value
+          @charc_values:   dict, value codes as key, desc. as value
+          @charc_chapters: dict, parameter codes as key, area code as
+                           value
+          @charc_classes:  dict, parameter codes as key, number of
+                           possible values (/classes) as value
         """
         charc_keys = {}
         charc_chapters = {}
@@ -217,7 +228,7 @@ class LanguageDB:
         """
         Returns a mapping between chapter IDs and their corresponding
         data fields (e.g., 'Area_ID', as listed in the CSV header of
-        chapters.csv in the WALS data).
+        chapters.csv in the WALS data). This is a static method!
 
         In:
           @data_path: path to WALS dataset (download from wals.info)

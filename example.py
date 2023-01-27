@@ -1,5 +1,4 @@
-from src.Evaluator import Evaluator
-from src.Scores import Scores
+from src import *
 import itertools
 
 e = Evaluator(load_from_cache=True)

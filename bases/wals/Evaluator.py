@@ -27,19 +27,51 @@ class WalsEvaluator:
 
     CACHE_FOLDER = 'bases/wals/cache/'
 
-    def __init__(self, load_from_cache: bool = True, cache_file: str = None):
+    def __init__(self, load_from_cache: bool = True,
+                 save_to_cache: bool = True, cache_file: str = None,
+                 cache_folder: str = None, db_obj: LanguageDB = None,
+                 db_data_path: str = None, normalise: bool = True):
         """
         Init (see class description above).
 
         In:
-          @load_from_cache: if True, Similarity scores are pre-loaded
+          @load_from_cache: if True, similarity scores are pre-loaded
+          @save_to_cache:   if True, similarity scores are always saved
+                            after (re-)evaluation (to @cache_path);
+                            note: the filename will be based on the
+                            current timestamp, @cache_file is only used
+                            for loading cache, not saving cache
           @cache_file:      if not set, latest file in cache directory
                             will be loaded (see class global)
+          @cache_folder:    directory to which to write cache files if
+                            @save_to_cache is true; otherwise class
+                            global CACHE_FOLDER is used by default
+          @db_obj:          instance of LanguageDB; if not given, a new
+                            object will be initialised and populated
+          @db_data_path:    path of WALS data folder (if not given,
+                            globally stored path in LanguageDB class
+                            will be accessed by default)
+          @normalise:       if True, scores are normalised and scaled
+                            to prevent all similarity scores from being
+                            above zero (all language pairs have at
+                            least some characteristics in common) which
+                            might be useful in evaluation-tasks; if
+                            False, the reported scores are the plain
+                            portion of characteristics that overlap
+                            (useful in tasks relating to pure language
+                            similarity)
 
         Out:
           - void
         """
-        self.language_db = LanguageDB()
+        if db_obj is None:
+            self.language_db = LanguageDB(data_path=db_data_path)
+        else:
+            self.language_db = db_obj
+
+        if cache_folder is not None:
+            self.CACHE_FOLDER = cache_folder
+
         self.languages = {wals_code: Language(wals_code, self.language_db)
                           for wals_code in self.language_db.languages_wals}
         self.language_pairs = list(itertools.combinations(self.languages, r=2))
@@ -48,8 +80,12 @@ class WalsEvaluator:
             self.load_scores_from_cache(cache_file=cache_file)
         else:
             self.populate_base_scores()
-            self.normalise_base_scores()
-            self.save_scores_to_cache()
+
+            if normalise:
+                self.normalise_base_scores()
+
+            if save_to_cache:
+                self.save_scores_to_cache()
 
     def save_scores_to_cache(self) -> None:
         """
