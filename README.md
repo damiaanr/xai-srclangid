@@ -15,3 +15,4 @@ Currently, the repository contains the following projects:
 - `evaluation` Small framework that offers multiple ways of evaluating the eventual model's behaviour.
 - `experiments/wordorder-entropy` Quick experiment relating to word order mistakes when translating specific language pairs.
 - `experiments/svm-vinted` Initial attempt at the source language identification task using manually designed language-specific features.
+- `featureprediction` First step in tackling the task by a two-step-pipeline-approach (*text* -> *WALS feature vector* -> *source language*).
