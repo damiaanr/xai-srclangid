@@ -15,7 +15,7 @@ class Scraper:
     # All compatible scrapers should be hard-listed here
     PROFILES = {
         'Sprzedajemy': {'lang_ISO639_3': 'pol', 'type': 'Marketplace'},
-        'Marktplaats': {'lang_ISO639_3': 'dut', 'type': 'Marketplace'},
+        'Marktplaats': {'lang_ISO639_3': 'nld', 'type': 'Marketplace'},
         'Vinted': {'type': 'Marketplace'}
     }
 

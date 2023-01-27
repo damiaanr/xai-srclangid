@@ -115,7 +115,7 @@ iso_639_3_to_1 = {
     'nde': 'nd',
     'nep': 'ne',
     'ndo': 'ng',
-    'dut': 'nl',
+    'nld': 'nl',
     'nno': 'nn',
     'nor': 'no',
     'nbl': 'nr',

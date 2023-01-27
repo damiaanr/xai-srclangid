@@ -11,16 +11,16 @@ Run `main.py --help` to invoke a detailed overview of all possible actions.
 
 1. Run `main.py -scrape Sprzedajemy -n 100 -rounds 5 -roundsleep 60` to add a total of 500 new samples to the dataset, scraped from [Sprzedajemy.pl](https://sprzedajemy.pl), in 5 rounds with a minute of cool-down time in between.
 2. Run `main.py -scrape Vinted -n 50 -rounds 10 -roundsleep 5 -lang ces` to add a total of 500 new samples to the dataset, scraped from [Vinted.cz](https://vinted.cz), in 10 rounds with five seconds of cool-down time in between.
-3. Run `main.py -translate pol dut GoogleUnofficial -n 40` to translate 40 Polish samples from the dataset into Dutch using an unofficial Google Translate API endpoint. Only original Polish texts which have not been translated into Dutch will be selected.
+3. Run `main.py -translate pol nld GoogleUnofficial -n 40` to translate 40 Polish samples from the dataset into Dutch using an unofficial Google Translate API endpoint. Only original Polish texts which have not been translated into Dutch will be selected.
 4. Run `main.py -stats` to overview the contents of the dataset (*i.e.*, the amount of samples per language, and the number of translations).
 ## Instruments
 *Note: some of the instruments below contain hard-coded values for certain parameters, such as the time of sleeping (in second) between HTTP requests. This is a deliberate choice as their values were set on the basis of empirical evidence during experimental testing.*
 ### Scrapers
 Currently, there are **three** scrapers working stably.
 
-- `MarktplaatsScraper` scrapes `Marketplace` content from platform [Marktplaats.nl](https://marktplaats.nl) in `dut` (Dutch)
+- `MarktplaatsScraper` scrapes `Marketplace` content from platform [Marktplaats.nl](https://marktplaats.nl) in `nld` (Dutch)
 - `SprzedajemyScraper` scrapes `Marketplace` content from platform [Sprzedajemy.pl](https://sprzedajemy.pl) in `pol` (Polish)
-- `VintedScraper` scrapes `Marketplace` content from multiple Vinted-platforms in `lit`, `deu`, `ces`, `spa`, `dut`, `swe`, `eng`, `pol`, `ita`, `por`, `slk`, and `hun`.
+- `VintedScraper` scrapes `Marketplace` content from multiple Vinted-platforms in `lit`, `deu`, `ces`, `spa`, `nld`, `swe`, `eng`, `pol`, `ita`, `por`, `slk`, and `hun`.
 
 ### Translators
 Currently, there is **one** translator working stably.
@@ -28,7 +28,7 @@ Currently, there is **one** translator working stably.
 - `GoogleUnofficial` translates using an old Google API endpoint (lower in quality than the live version of Google Translate)
 
 ## Dataset
-The dataset consists of all `.yaml` files in a defined folder (default: `output`). Each file contains a set of text samples, which are the individual elements in the dataset. At the moment, the dataset contains **158,089** samples of which about **68K** are translations (predominantly in `dut`, `eng`, `ces`, `slk`, `deu`, and `pol`).
+The dataset consists of all `.yaml` files in a defined folder (default: `output`). Each file contains a set of text samples, which are the individual elements in the dataset. At the moment, the dataset contains **158,089** samples of which about **68K** are translations (predominantly in `nld`, `eng`, `ces`, `slk`, `deu`, and `pol`).
 ### Format
 Each sample (element) in the dataset can hold the following attributes:
 - **`identifier`** internal ID of the sample (translated samples are represented by the same identifier as the original sample)

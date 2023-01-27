@@ -12,7 +12,7 @@ class VintedScraper:
     which ads were already parsed. The cache also contains ids of ads
     that failed to fetch due to request errors.
 
-    The Vinted scraper accepts 12 languages: lit, deu, ces, spa, dut,
+    The Vinted scraper accepts 12 languages: lit, deu, ces, spa, nld,
     swe, eng, pol, ita, por, slk, and hun.
 
     The global class-level properties are not meant to be changed by

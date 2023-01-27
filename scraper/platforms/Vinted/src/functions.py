@@ -11,7 +11,7 @@ from typing import Union as U, Tuple as T
 # Vinted's many websites and corresponding dominant languages
 vinted_country_id_to_lang_ISO639_3 = {
     1:  'lit', 2:  'deu', 3:  'ces', 7:  'spa',
-    10: 'dut', 12: 'swe', 13: 'eng', 15: 'pol',
+    10: 'nld', 12: 'swe', 13: 'eng', 15: 'pol',
     18: 'ita', 21: 'por', 22: 'slk', 24: 'hun'
 }
 
