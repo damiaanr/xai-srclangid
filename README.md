@@ -47,7 +47,7 @@ When training the linear classifier with only one out of the six above-listed fe
 | `negations`      | 0.519    | +0.019                   | 1       |
 | `cases`          | 0.556    | +0.056                   | 7       |
 | `adjnounorder`   | 0.636    | +0.136                   | 2       |
-| `posentropy`     | 0.645    | +0.145 (+0.235 unrstrc.) | 14 (8)  |
+| `posentropy`     | 0.645    | +0.145 (+0.235 unrstrc.) | 14 (18)  |
 | **all of above** | 0.712    | +0.212 (+0.274 unrstrc.) | 36 (158)|
 
 When considering 'classical' features for the classification tasks (i.e., character *n*-grams, PoS *n*-grams and morph-*n*-grams; see `experiment1.py` for the details) the accuracy was `0.939` for a linear SVM.
