@@ -1,4 +1,4 @@
 [submodule "dataset"]
 	path = dataset
-	url = git@github.com:damiaanr/politie-thesis.git
+	url = git@github.com:damiaanr/xai-srclangid.git
 	branch = datasets/scraper-translator
